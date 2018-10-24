@@ -16,7 +16,7 @@ from autosklearn.data.abstract_data_manager import perform_one_hot_encoding
 from autosklearn.metalearning.metafeatures import metafeatures, metafeature
 
 sys.path.append('.')
-from update_metadata_util import load_task, classification_tasks, \
+from scripts.update_metadata_util import load_task, classification_tasks, \
     regression_tasks
 
 

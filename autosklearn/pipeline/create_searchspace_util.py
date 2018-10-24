@@ -120,7 +120,8 @@ def find_active_choices(matches, node, node_idx, dataset_properties, \
         slices = tuple(slice(None) if idx != node_idx else slice(c_idx, c_idx+1)
                   for idx in range(len(matches.shape)))
 
-        if np.sum(matches[slices]) > 0:
+
+        if np.sum(matches[tuple(slices)]) > 0:
             choices.append(component)
     return choices
 
