@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
   curl \
   python3-pip \
   swig \
+  git \
   && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip then install dependencies
@@ -16,4 +17,14 @@ RUN curl https://raw.githubusercontent.com/automl/auto-sklearn/master/requiremen
 # Install
 RUN pip3 install \
   auto-sklearn \
-  jupyter
+  jupyter \
+  liac-arff \
+  requests \
+  xmltodict
+
+RUN pip3 install \
+    oslo_concurrency \
+    mock \
+    pytest
+
+RUN pip3 install git+https://github.com/openml/openml-python@develop --no-deps
