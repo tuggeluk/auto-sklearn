@@ -14,7 +14,7 @@ from smac.scenario.scenario import Scenario
 from smac.tae.execute_ta_run import StatusType
 
 sys.path.append('.')
-from update_metadata_util import load_task
+from .update_metadata_util import load_task
 
 
 parser = argparse.ArgumentParser()

@@ -3,7 +3,7 @@ import os
 import sys
 
 sys.path.append('.')
-from update_metadata_util import classification_tasks, regression_tasks
+from .update_metadata_util import classification_tasks, regression_tasks
 
 
 parser = argparse.ArgumentParser()

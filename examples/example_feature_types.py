@@ -30,7 +30,6 @@ except ImportError:
 
 def main():
     # Load adult dataset from openml.org, see https://www.openml.org/t/2117
-    openml.config.apikey = '523eab62c99d81413f527752d449a595'
 
     task = openml.tasks.get_task(2117)
     train_indices, test_indices = task.get_train_test_split_indices()
