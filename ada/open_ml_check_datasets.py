@@ -7,6 +7,7 @@ import os
 import pandas as pa
 import numpy as np
 import pickle
+import traceback
 openml.config.cache_directory = os.path.expanduser('cache_data')
 
 classification_runs = list()
@@ -17,9 +18,6 @@ datasets = openml.datasets.list_datasets(status="active")
 tasks = openml.tasks.list_tasks()
 
 
-# get most run task
-task_ids = [1,2] #classification and regression
-
 # Nested Dicts storing the scraped metadata
 # task_name/dataset_id/run_id
 openml_metadata = dict()
@@ -28,6 +26,7 @@ openml_metadata["regression"] = dict()
 openml_metadata["lc_prediction"] = dict()
 
 nr_ds = 0
+
 
 for dataset in datasets.keys():
 
@@ -44,8 +43,10 @@ for dataset in datasets.keys():
     print("Getting Data for Dataset Nr: "+str(dataset))
 
     try:
-        dataset_tasks =  [tasks[k] for k in tasks if tasks[k]["did"]==dataset]
-
+        dataset_tasks = [tasks[k] for k in tasks if tasks[k]["did"]==dataset]
+        if len(dataset_tasks) == 0:
+            print("empty dataset")
+            continue
 
         dataset_runs = [openml.runs.list_runs(task=[task["tid"]]) for task in dataset_tasks]
         run_lengths = [len(run) for run in dataset_runs]
@@ -53,6 +54,10 @@ for dataset in datasets.keys():
         # max runs task
         task_id = run_lengths.index(max(run_lengths))
         max_runs = dataset_runs[task_id]
+        if len(max_runs) == 0:
+            print("empty dataset")
+            continue
+
         runs_to_get = np.random.choice(list(max_runs.keys()), size=min(200,len(max_runs)), replace=False)
 
 
@@ -88,7 +93,13 @@ for dataset in datasets.keys():
             nr_keep = max(int(len(runs_dict_unique) / 4), 10)
             runs_dict_unique = runs_dict_unique[:nr_keep]
 
-        openml_metadata[type_key][task_id] = runs_dict_unique
+        openml_metadata[type_key][dataset] = runs_dict_unique
 
     except Exception as e:
-        print(e)
+        with open('log.txt', 'a') as f:
+            f.write(str(e))
+            f.write(traceback.format_exc())
+
+
+with open('openml_metadata'+str(nr_ds)+'.pickle', 'wb') as handle:
+    pickle.dump(openml_metadata, handle, protocol=pickle.HIGHEST_PROTOCOL)
